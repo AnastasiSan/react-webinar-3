@@ -48,7 +48,7 @@ class Store {
       ...this.state,
       list: [
         ...this.state.list,
-        { title: "Новая запись", id: generateId(), clicked: 0 },
+        { code: this.state.list.length + 1,title: "Новая запись", id: generateId(), clicked: 0 },
       ],
     });
   }

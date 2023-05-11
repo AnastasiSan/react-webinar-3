@@ -19,13 +19,14 @@ function App({ store }) {
         <button onClick={() => store.addItem()}>Добавить</button>
       </div>
       <div className="App-center">
-        <ol className="List">
+        <div className="List">
           {list.map((item) => (
-            <li key={item.id} className="List-item">
+            <div key={item.id} className="List-item">
               <div
                 className={"Item" + (item.selected ? " Item_selected" : "")}
                 onClick={() => store.selectItem(item.id)}
               >
+                <div className='Item-code'>{item.code}</div>
                 <div className="Item-title">
                   {item.title}
                   {item.clicked > 0 && (
@@ -40,9 +41,9 @@ function App({ store }) {
                   </button>
                 </div>
               </div>
-            </li>
+            </div>
           ))}
-        </ol>
+        </div>
       </div>
     </div>
   );
