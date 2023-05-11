@@ -1,3 +1,5 @@
+import { generateId } from "./utils";
+
 /**
  * Хранилище состояния приложения
  */
@@ -16,8 +18,8 @@ class Store {
     this.listeners.push(listener);
     // Возвращается функция для удаления добавленного слушателя
     return () => {
-      this.listeners = this.listeners.filter(item => item !== listener);
-    }
+      this.listeners = this.listeners.filter((item) => item !== listener);
+    };
   }
 
   /**
@@ -44,35 +46,42 @@ class Store {
   addItem() {
     this.setState({
       ...this.state,
-      list: [...this.state.list, {code: this.state.list.length + 1, title: 'Новая запись'}]
-    })
-  };
+      list: [
+        ...this.state.list,
+        { title: "Новая запись", id: generateId(), clicked: 0 },
+      ],
+    });
+  }
 
   /**
    * Удаление записи по коду
-   * @param code
+   * @param id
    */
-  deleteItem(code) {
+  deleteItem(id) {
     this.setState({
       ...this.state,
-      list: this.state.list.filter(item => item.code !== code)
-    })
-  };
+      list: this.state.list.filter((item) => item.id !== id),
+    });
+  }
 
   /**
    * Выделение записи по коду
-   * @param code
+   * @param id
+   * @param clicked
    */
-  selectItem(code) {
+  selectItem(id) {
     this.setState({
       ...this.state,
-      list: this.state.list.map(item => {
-        if (item.code === code) {
+      list: this.state.list.map((item) => {
+        if (item.id === id) {
           item.selected = !item.selected;
+          item.clicked = item.clicked + 1;
+        } else {
+          item.selected = false;
         }
         return item;
-      })
-    })
+      }),
+    });
   }
 }
 

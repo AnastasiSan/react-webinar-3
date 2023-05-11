@@ -26,3 +26,5 @@ export function createElement(name, props = {}, ...children) {
 
   return element;
 }
+
+export const generateId = () => parseInt(Date.now() * Math.random()); 
