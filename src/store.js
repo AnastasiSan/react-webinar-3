@@ -1,4 +1,4 @@
-import { generateId } from "./utils";
+import { generateCode } from './utils';
 
 /**
  * Хранилище состояния приложения
@@ -48,41 +48,85 @@ class Store {
       ...this.state,
       list: [
         ...this.state.list,
-        { code:  this.state.list[this.state.list.length-1].code + 1,title: "Новая запись", id: generateId(), clicked: 0 },
+        { code: generateCode(), title: 'Новая запись' },
       ],
     });
   }
 
   /**
    * Удаление записи по коду
-   * @param id
+   * @param code
    */
-  deleteItem(id) {
+  deleteItem(code) {
     this.setState({
       ...this.state,
-      list: this.state.list.filter((item) => item.id !== id),
+      // Новый список, в котором не будет удаляемой записи
+      list: this.state.list.filter((item) => item.code !== code),
     });
   }
 
   /**
    * Выделение записи по коду
-   * @param id
-   * @param clicked
+   * @param code
    */
-  selectItem(id) {
+  selectItem(code) {
     this.setState({
       ...this.state,
       list: this.state.list.map((item) => {
-        if (item.id === id) {
-          item.selected = !item.selected;
-          if(item.selected) {
-            item.clicked = item.clicked + 1;
-          }
-        } else {
-          item.selected = false;
+        if (item.code === code) {
+          // Смена выделения и подсчёт
+          return {
+            ...item,
+            selected: !item.selected,
+            count: item.selected ? item.count : item.count + 1 || 1,
+          };
         }
-        return item;
+        // Сброс выделения если выделена
+        return item.selected ? { ...item, selected: false } : item;
       }),
+    });
+  }
+
+  /**
+     * Добавление товара по коду
+     * @param code
+     */
+  addToOrder(code) {
+    const existingItem = this.state.order.find((item) => item.code === code)
+    if (existingItem) {
+      this.setState({
+        ...this.state,
+        order: this.state.order.map((item) => {
+          if (item.code === code) {
+            return { ...item, count: item.count + 1 };
+          }
+          return item;
+        }),
+      });
+    } else {
+      const item = this.state.list.find((item) => item.code === code);
+      this.setState({
+        ...this.state,
+        order: [
+          ...this.state.order,
+          {
+            ...item,
+            count: 1,
+          },
+        ],
+      });
+    }
+  }
+
+  /**
+   * Удаление товара по коду
+   * @param code
+   */
+
+  deleteOrder(code) {
+    this.setState({
+      ...this.state,
+      order: this.state.order.filter((item) => item.code !== code),
     });
   }
 }
