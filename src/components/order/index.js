@@ -2,30 +2,18 @@ import React from 'react';
 import './style.css';
 import PropTypes from 'prop-types';
 import { cn as bem } from '@bem-react/classname';
-import Head from '../head';
 import List from '../list';
-import { getTotalPrice } from '../../utils';
 
 function Order({
   order,
-  isOpenModal,
-  setIsOpenModal,
   onDeleteOrder,
   buttonTitle,
+  totalPrice
 }) {
   const cn = bem('Order');
   return (
-    <div className={`${cn()} ${isOpenModal && cn('opened')}`}>
-      <div className={cn('container')}>
-        <Head title='Корзина'>
-          <button
-            onClick={() => {
-              setIsOpenModal(false);
-            }}
-          >
-            Закрыть
-          </button>
-        </Head>
+    <div className={cn()} >
+        
         <div className={cn('info')}>
           <List
             list={order}
@@ -34,9 +22,8 @@ function Order({
           />
         </div>
         <div className={cn('totalPrice')}>
-          Итого <span>{getTotalPrice(order)} ₽</span>
+          Итого <span>{totalPrice.price} ₽</span>
         </div>
-      </div>
     </div>
   );
 }
@@ -48,7 +35,6 @@ Order.propTypes = {
     })
   ).isRequired,
   buttonTitle: PropTypes.string,
-  isOpenModal: PropTypes.bool,
   setIsOpenModal: PropTypes.func,
   onDeleteOrderItem: PropTypes.func,
 };

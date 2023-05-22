@@ -7,6 +7,10 @@ class Store {
   constructor(initState = {}) {
     this.state = initState;
     this.listeners = []; // Слушатели изменений состояния
+    this.state.totalPrice = {
+      count: 0,
+      price: 0,
+    };
   }
 
   /**
@@ -38,6 +42,15 @@ class Store {
     this.state = newState;
     // Вызываем всех слушателей
     for (const listener of this.listeners) listener();
+  }
+
+  // Считаем сумму товаров
+  getTotalPrice(list) {
+    this.state = list
+    const totalPrice = list.reduce((acc, item) => {
+      return acc + item.price * item.count;
+    }, 0);
+    return totalPrice.toLocaleString();
   }
 
   /**
@@ -86,7 +99,6 @@ class Store {
       }),
     });
   }
-
   /**
      * Добавление товара по коду
      * @param code
@@ -116,6 +128,13 @@ class Store {
         ],
       });
     }
+    this.setState({
+      ...this.state,
+      totalPrice: {
+        count: this.state.order.length,
+        price: this.getTotalPrice(this.state.order),
+      },
+    });
   }
 
   /**
@@ -127,6 +146,13 @@ class Store {
     this.setState({
       ...this.state,
       order: this.state.order.filter((item) => item.code !== code),
+    });
+    this.setState({
+      ...this.state,
+      totalPrice: {
+        count: this.state.order.length,
+        price: this.getTotalPrice(this.state.order),
+      },
     });
   }
 }

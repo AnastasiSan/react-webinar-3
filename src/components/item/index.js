@@ -19,7 +19,7 @@ function Item(props) {
       <div className={cn('code')}>{props.item.code}</div>
       <div className={cn('title')}>{props.item.title}</div>
       <div className={cn('price')}>
-        {numberWithSpaces(props.item.price)} ₽
+        {props.item.price.toLocaleString()} ₽
       </div>
       {props.item.count && (
         <div className={cn('count')}>{props.item.count} шт</div>

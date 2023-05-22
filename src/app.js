@@ -5,6 +5,7 @@ import Head from './components/head';
 import PageLayout from './components/page-layout';
 import Order from './components/order';
 import './style.css'
+import Modal from './components/modal';
 
 /**
  * Приложение
@@ -16,6 +17,7 @@ function App({ store }) {
 
   const list = store.getState().list;
   const order = store.getState().order;
+  const totalPrice = store.getState().totalPrice
 
   const callbacks = {
     onAddToOrder: useCallback(
@@ -36,19 +38,22 @@ function App({ store }) {
   return (
     <PageLayout>
       <Head title='Магазин' />
-      <Controls order={order} setIsOpenModal={setIsOpenModal} />
+      <Controls totalPrice={totalPrice} order={order} setIsOpenModal={setIsOpenModal} />
       <List
         buttonTitle={'Добавить'}
         list={list}
         onClick={callbacks.onAddToOrder}
       />
-      <Order
-        buttonTitle={'Удалить'}
-        order={order}
-        isOpenModal={isOpenModal}
-        setIsOpenModal={setIsOpenModal}
-        onDeleteOrder={callbacks.onDeleteOrder}
-      />
+      {isOpenModal && (
+        <Modal title='Корзина' setIsOpenModal={setIsOpenModal}>
+        <Order
+          buttonTitle={'Удалить'}
+          order={order}
+          onDeleteOrder={callbacks.onDeleteOrder}
+          totalPrice={totalPrice}
+        />
+      </Modal>
+      )}
     </PageLayout>
   );
 }

@@ -51,16 +51,12 @@ export function generateCode2() {
     ? ++generateCode2.value
     : (generateCode2.value = 1);
 }
-// Пробелы для цены
-export function numberWithSpaces(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-}
 
 // Итоговая цена
 export function getTotalPrice(list) {
   const totalPrice = list.reduce((acc, item) => {
     return acc + item.price * item.count;
   }, 0);
-  return numberWithSpaces(totalPrice);
+  return totalPrice.toLocaleString();
 }
 
